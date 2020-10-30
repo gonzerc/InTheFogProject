@@ -11,32 +11,30 @@ public class DetectionScript : MonoBehaviour
         sphCol = GetComponent<SphereCollider>();
     }
 
-    public void ShrinkCollider(float perc)
+    public float GetCurrentRadius()
     {
-        sphCol.radius *= perc;
+        return sphCol.radius;
     }
 
-    public void GrowCollider(float perc)
+    public void ChangeRadius(float newRadius)
     {
-        sphCol.radius /= perc;
+        sphCol.radius = newRadius;
     }
 
     //================================================= Enemy Detection ================================================\\
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Enemy"))
-        {
-            other.gameObject.GetComponent<Enemy>().ChasePlayer();
-            Debug.Log("Detected");
-        }
-    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Enemy"))
+    //    {
+    //        other.gameObject.GetComponent<ZombieController>().DetectPlayer();
+    //    }
+    //}
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Enemy"))
-        {
-            other.gameObject.GetComponent<Enemy>().StopChasePlayer();
-            Debug.Log("Undetected");
-        }
-    }
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if (other.gameObject.CompareTag("Enemy"))
+    //    {
+    //        other.gameObject.GetComponent<ZombieController>().UndetectPlayer();
+    //    }
+    //}
 }

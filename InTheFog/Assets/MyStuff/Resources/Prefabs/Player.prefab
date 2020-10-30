@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 1878090876889053570}
   m_Layer: 0
   m_Name: DetectionRadius
-  m_TagString: Untagged
+  m_TagString: PlayerDetection
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -202,7 +202,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 567
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -354,7 +354,10 @@ MonoBehaviour:
   walkSpeed: 4
   sprintSpeed: 8
   crouchSpeed: 2
-  jumpForce: 2
+  walkRadius: 15
+  sprintRadius: 30
+  crouchRadius: 5
+  shootRadius: 50
   cameraSpeed: 2.5
   upperPitchLimit: 60
   lowerPitchLimit: -60

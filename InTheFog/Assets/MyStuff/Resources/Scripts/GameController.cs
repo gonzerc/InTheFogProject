@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -38,13 +39,13 @@ public class GameController : MonoBehaviour
     void Update()
     {
         //start of round
-        if (Enemy.enemies.Count > 0)
+        if (ZombieController.zombies.Count > 0)
         {
             roundRunning = true;
         }
 
         //end of round
-        if (roundRunning && Enemy.enemies.Count == 0)
+        if (roundRunning && ZombieController.zombies.Count == 0)
         {
             //Debug.Log("Round over");
             roundRunning = false;
@@ -89,6 +90,14 @@ public class GameController : MonoBehaviour
         //Debug.Log("Continue: " + Time.timeScale);
         gamePaused = false;
         Enemy.ContinueGame();
+    }
+
+    public static void QuitGame()
+    {
+        Enemy.QuitGame();
+
+        Time.timeScale = 1;
+        SceneManager.LoadScene("MainMenu");
     }
 
     private IEnumerator DelayBetweenRounds()

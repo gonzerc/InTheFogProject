@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
     public RawImage healthBorderImage;
+    public Text roundNumberText;
     public Text enemiesText;
     public Slider healthSlider;
     public Image healthFill;
@@ -96,7 +96,8 @@ public class UIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        enemiesText.text = "Enemies Remaining: " + Enemy.enemies.Count;
+        roundNumberText.text = "Round " + GameController.roundNumber;
+        enemiesText.text = "Zombies Remaining: " + ZombieController.zombies.Count;
         healthSlider.value = player.GetPlayerHealth();
         staminaSlider.value = player.GetPlayerStamina();
         bulletsText.text = player.bulletsInMag + " / " + player.ammoRemaining;
@@ -158,8 +159,7 @@ public class UIController : MonoBehaviour
     {
         musicController.ButtonClick();
 
-        Time.timeScale = 1;
-        SceneManager.LoadScene("MainMenu");
+        GameController.QuitGame();
     }
 
     // ===============================================================

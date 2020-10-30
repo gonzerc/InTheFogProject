@@ -14,7 +14,12 @@ public class PlayerController : MonoBehaviour
     public float walkSpeed;
     public float sprintSpeed;
     public float crouchSpeed;
-    public float jumpForce;
+
+    public float walkRadius;
+    public float sprintRadius;
+    public float crouchRadius;
+    public float shootRadius;
+
     public float cameraSpeed;
     public float upperPitchLimit;
     public float lowerPitchLimit;
@@ -133,12 +138,6 @@ public class PlayerController : MonoBehaviour
             }
 
 
-            //jump on SPACE
-            if (Input.GetKeyDown(KeyCode.Space) && Mathf.Approximately(rb.velocity.y, 0))
-            {
-                rb.AddForce(jump * jumpForce, ForceMode.Impulse);
-            }
-
             //sprint on left shift down
             if (Input.GetKeyDown(KeyCode.LeftShift) && !crouching)
             {
@@ -146,7 +145,7 @@ public class PlayerController : MonoBehaviour
                 {
                     sprinting = true;
                     moveSpeed = sprintSpeed;
-                    detectionScript.GrowCollider(1.5f);
+                    detectionScript.ChangeRadius(sprintRadius);
                     StartCoroutine(DecreaseStamina());
                 }
             }
@@ -156,7 +155,7 @@ public class PlayerController : MonoBehaviour
             {
                 sprinting = false;
                 moveSpeed = walkSpeed;
-                detectionScript.ShrinkCollider(1.5f);
+                detectionScript.ChangeRadius(walkRadius);
                 StartCoroutine(IncreaseStamina());
             }
 
@@ -167,7 +166,7 @@ public class PlayerController : MonoBehaviour
                 moveSpeed = crouchSpeed;
                 transform.localScale -= new Vector3(0.0f, 0.25f, 0.0f);
                 crouching = true;
-                detectionScript.ShrinkCollider(2f);
+                detectionScript.ChangeRadius(crouchRadius);
             }
 
             //stand up
@@ -177,7 +176,7 @@ public class PlayerController : MonoBehaviour
                 moveSpeed = walkSpeed;
                 transform.localScale += new Vector3(0.0f, 0.25f, 0.0f);
                 crouching = false;
-                detectionScript.GrowCollider(2f);
+                detectionScript.ChangeRadius(walkRadius);
             }
 
             ////ADS
@@ -216,6 +215,7 @@ public class PlayerController : MonoBehaviour
     public void DamagePlayer(int damage)
     {
         playerHealth -= damage;
+        Debug.Log("Player took " + damage + " damage");
     }
 
     public void HealPlayer(int amount)
@@ -271,10 +271,14 @@ public class PlayerController : MonoBehaviour
         musicController.PlayGunshot();
         bulletsInMag--;
 
-        detectionScript.GrowCollider(2f);
+        float oldRadius = detectionScript.GetCurrentRadius();
+
+        detectionScript.ChangeRadius(shootRadius);
         yield return new WaitForSeconds(0.5f);
-        detectionScript.ShrinkCollider(2f);
+        detectionScript.ChangeRadius(oldRadius);
     }
+
+
     private IEnumerator Reload()
     {
         reloading = true;
@@ -294,18 +298,4 @@ public class PlayerController : MonoBehaviour
         bulletsInMag += bulletsToReload;
         reloading = false;
     }
-
-
-
-
-
-    //========================================================Gizmos Debugging============================================\\
-
-
-    //private void OnDrawGizmosSelected()
-    //{
-    //    Gizmos.color = new Color(1.0f, 0.0f, 0.0f, 0.5f);
-    //    Gizmos.DrawRay(bulletSpawnPos.position, bulletSpawnPos.transform.forward * 20);
-    //    Gizmos.DrawCube(bulletSpawnPos.position + new Vector3(0.35f, 0.25f, -10.0f), new Vector3(1.0f, 1.0f, 0.0f));
-    //}
 }

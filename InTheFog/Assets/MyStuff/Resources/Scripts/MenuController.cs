@@ -108,7 +108,7 @@ public class MenuController : MonoBehaviour
     {
         musicController.ButtonClick();
 
-        Debug.Log("Quit");
+        Application.Quit();
     }
 
     void LoadForest()

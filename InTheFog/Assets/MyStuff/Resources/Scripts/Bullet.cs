@@ -32,7 +32,7 @@ public class Bullet : MonoBehaviour
 
         if (other.CompareTag("Enemy"))
         {
-            other.GetComponent<Enemy>().TakeDamage(damage);
+            other.GetComponent<ZombieController>().TakeDamage(damage);
             //Debug.Log("Hit " + other.name);
             Destroy(this.gameObject);
         }

@@ -13,19 +13,27 @@ public class Enemy : MonoBehaviour
     public float chaseSpeed;    //speed for chasing player
 
     private NavMeshAgent agent;
-    private Transform targetDestination;
+    private Vector3 targetDestination;
     private GameObject player;
     private int health;
     private int damageAmount;
     private int currencyAmount;
     private float destTimer;
     private float attTimer;
+
+    //enemy states
+    private bool wandering;
     private bool chasingPlayer;
+    private bool lookingForPlayer;
+
+    public string objName;
 
     public static List<GameObject> enemies = new List<GameObject>();
 
     void Awake()
     {
+        objName = "Enemy " + enemies.Count;
+
         enemies.Add(this.gameObject);
         //Debug.Log("Number of enemies: " + enemies.Count);
 
@@ -36,14 +44,16 @@ public class Enemy : MonoBehaviour
 
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player");
-    }
 
-    private void Start()
-    {
+
         destTimer = wanderTimer;
         attTimer = 0;
+        wandering = true;
         chasingPlayer = false;
+        lookingForPlayer = false;
         agent.speed = walkSpeed;
+
+        Debug.Log(this.objName + " : " + this.chasingPlayer);
     }
 
     // Update is called once per frame
@@ -52,22 +62,52 @@ public class Enemy : MonoBehaviour
         //wander around
         destTimer += Time.deltaTime;
         attTimer += Time.deltaTime;
-        if(destTimer >= wanderTimer && !chasingPlayer)
-        {
-            Vector3 dest;
-            if(GetDest(transform.position, wanderRadius, out dest))
-            {
-                agent.SetDestination(dest);
-                Debug.DrawRay(dest, Vector3.up, Color.blue, 2.0f);
-            }
-            destTimer = 0;
-        }
         
-        //chase after player
-        if (destTimer >= chaseTimer && chasingPlayer)
+        //update new 
+        if (!lookingForPlayer)
         {
-            agent.SetDestination(player.transform.position);
-            destTimer = 0;
+            if (wandering)
+            {
+                if (destTimer >= wanderTimer)
+                {
+                    Vector3 dest;
+                    if (GetDest(transform.position, wanderRadius, out dest))
+                    {
+                        targetDestination = dest;
+                        //agent.SetDestination(dest);
+                        Debug.DrawRay(dest, Vector3.up * 10, Color.blue, 10.0f);
+                    }
+                    destTimer = 0;
+                }
+
+                if((targetDestination - transform.position).magnitude <= 2)
+                {
+                    agent.isStopped = true;
+                }
+            }
+
+            //chase after player
+            if (chasingPlayer && destTimer >= chaseTimer)
+            {
+                targetDestination = player.transform.position;
+                //agent.SetDestination(player.transform.position);
+                destTimer = 0;
+            }
+
+            agent.SetDestination(targetDestination);
+        }
+        else if (lookingForPlayer)
+        {
+            Debug.DrawRay(targetDestination, Vector3.up * 10, Color.red, 15.0f);
+            if((targetDestination - transform.position).magnitude <= 2)
+            {
+                Debug.Log(objName + " stopped");
+
+                agent.speed = walkSpeed;
+
+                wandering = true;
+                lookingForPlayer = false;
+            }
         }
 
         if(attTimer >= attackTimer)
@@ -112,17 +152,39 @@ public class Enemy : MonoBehaviour
     }
 
     //called from player trigger enter
-    public void ChasePlayer()
+    public void DetectPlayer()
     {
+        lookingForPlayer = false;
         chasingPlayer = true;
+        wandering = false;
+
         agent.speed = chaseSpeed;
+        Debug.Log(objName + "chasing player");
     }
 
     //called from player trigger exit
-    public void StopChasePlayer()
+    public void UndetectPlayer()
     {
+        //StartCoroutine(LookForPlayer());
+        //chasingPlayer = false;
+        //agent.speed = walkSpeed;
+
         chasingPlayer = false;
-        agent.speed = walkSpeed;
+        lookingForPlayer = true;
+
+        targetDestination = player.transform.position;
+        agent.SetDestination(targetDestination);
+
+        Debug.Log(objName + " looking");
+    }
+
+    private IEnumerator LookForPlayer()
+    {
+        agent.SetDestination(player.transform.position);
+
+        yield return new WaitForSeconds(2f);
+
+
     }
 
     private IEnumerator DamageAnimation()
@@ -155,5 +217,15 @@ public class Enemy : MonoBehaviour
         {
             enemy.GetComponent<NavMeshAgent>().isStopped = false;
         }
+    }
+
+    public static void QuitGame()
+    {
+        foreach(GameObject e in enemies)
+        {
+            Destroy(e);
+        }
+
+        enemies.Clear();
     }
 }
