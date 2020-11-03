@@ -54,7 +54,6 @@ public class ZombieController : MonoBehaviour
         if(this.zombieHealth <= 0 && !dying)
         {
             dying = true;
-            Debug.Log(zombieIndex + " dead");
             StartCoroutine(ActivateZombieDeath());
         }
     }
@@ -108,9 +107,13 @@ public class ZombieController : MonoBehaviour
 
     private IEnumerator ActivateZombieDeath()
     {
+        zombies.Remove(this.gameObject);
+
         int animInt = Random.Range(0, 2);
         animator.SetInteger("fallAnim", animInt);
         animator.SetTrigger("dead");
+
+        player.GetComponent<PlayerController>().AddCurrency(currencyAmount);
         yield return null;
     }
 

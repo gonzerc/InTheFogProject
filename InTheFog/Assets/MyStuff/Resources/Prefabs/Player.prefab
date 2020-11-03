@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8832641201697939167}
   - component: {fileID: 9105124016569486251}
   - component: {fileID: 4013843490490347756}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: PlayerIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 20
+  m_Radius: 15
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1878090876889053570
 MonoBehaviour:
@@ -355,9 +355,9 @@ MonoBehaviour:
   sprintSpeed: 8
   crouchSpeed: 2
   walkRadius: 15
-  sprintRadius: 30
+  sprintRadius: 25
   crouchRadius: 5
-  shootRadius: 50
+  shootRadius: 40
   cameraSpeed: 2.5
   upperPitchLimit: 60
   lowerPitchLimit: -60

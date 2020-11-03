@@ -7,6 +7,7 @@ public class TerminalScript : MonoBehaviour
 {
     public Canvas mainCanvas;
     public Canvas terminalCanvas;
+    public Camera mapCamera;
 
     private UIController uiController;
     private MusicController musicController;
@@ -31,16 +32,6 @@ public class TerminalScript : MonoBehaviour
         {
             ToggleTerminal();
         }
-
-        //if(Input.GetKeyDown(KeyCode.E) && canInteract)
-        //{
-        //    OpenTerminal();
-        //}
-
-        //if(GameController.terminalOpen && Input.GetKeyDown(KeyCode.E))
-        //{
-        //    CloseTerminal();
-        //}
     }
 
 
@@ -58,10 +49,11 @@ public class TerminalScript : MonoBehaviour
 
     private void OpenTerminal()
     {
-        //Debug.Log("Open terminal");
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        
+
+        mapCamera.cullingMask = (1 << LayerMask.NameToLayer("Level")) | (1 << LayerMask.NameToLayer("Minimap"));
+
         GameController.terminalOpen = true;
 
         uiController.ChangeInGameElements(false);
@@ -75,6 +67,8 @@ public class TerminalScript : MonoBehaviour
         uiController.ChangeInGameElements(true);
 
         GameController.terminalOpen = false;
+
+        mapCamera.cullingMask = (1 << LayerMask.NameToLayer("Level"));
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

@@ -183,14 +183,16 @@ public class PlayerController : MonoBehaviour
             if (Input.GetButtonDown("Fire2"))
             {
                 //Debug.Log("ADS on");
-                //gun.transform.localPosition = Vector3.Lerp(gun.transform.localPosition, new Vector3(0.0f, -0.15f, 0.5f), 60);
-                playerCam.fieldOfView = Mathf.Lerp(60f, 45f, Time.time);
+                gun.transform.localPosition = Vector3.Lerp(gun.transform.localPosition, new Vector3(0.0f, -0.15f, 0.5f), 60);
+                playerCam.fieldOfView = Mathf.Lerp(60f, 40f, Time.time);
+                ui.ToggleADS();
             }
             if (Input.GetButtonUp("Fire2"))
             {
                 //Debug.Log("ADS off");
-                //gun.transform.localPosition = Vector3.Lerp(gun.transform.localPosition, new Vector3(0.35f, -0.5f, 1.0f), 30);
-                playerCam.fieldOfView = Mathf.Lerp(45f, 60f, Time.time);
+                ui.ToggleADS();
+                gun.transform.localPosition = Vector3.Lerp(gun.transform.localPosition, new Vector3(0.35f, -0.5f, 1.0f), 30);
+                playerCam.fieldOfView = Mathf.Lerp(40f, 60f, Time.time);
             }
         }
     }

@@ -14,8 +14,10 @@ public class UIController : MonoBehaviour
     public Slider staminaSlider;
     public Text currencyText;
     public Text gameMessageText;
+    public RawImage minimap;
 
     //in game only elements
+    public Image crossHairsImage;
     public Text bulletsText;
     public Slider reloadBar;
     public Text reloadHintText;
@@ -35,6 +37,8 @@ public class UIController : MonoBehaviour
     private Color healthColor;
     public float fadeInTime;
     private bool textFaded;
+    private bool mapOpen;
+    private bool crosshairOn;
     private PlayerController player;
     private ArrayList inGameElements;
     private ArrayList pauseElements;
@@ -51,11 +55,14 @@ public class UIController : MonoBehaviour
         gameMessageText.text = "";
         gameMessageText.color = faded;
         textFaded = true;
+        mapOpen = false;
+        crosshairOn = true;
         reloadHintText.text = "";
 
         inGameElements = new ArrayList();
         pauseElements = new ArrayList();
 
+        inGameElements.Add(crossHairsImage.gameObject);
         inGameElements.Add(bulletsText.gameObject);
         inGameElements.Add(reloadHintText.gameObject);
         pauseElements.Add(pauseText.gameObject);
@@ -76,6 +83,7 @@ public class UIController : MonoBehaviour
         musicController = FindObjectOfType<MusicController>();
         interactText.gameObject.SetActive(false);
         reloadBar.gameObject.SetActive(false);
+        minimap.gameObject.SetActive(false);
 
         //activate in game elements
         foreach(GameObject o in inGameElements)
@@ -104,6 +112,11 @@ public class UIController : MonoBehaviour
 
         healthColor = new Color(1.0f, 1.0f, 1.0f, (100 - healthSlider.value) / 100);
         healthBorderImage.color = healthColor;
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            TriggerMap();
+        }
 
         if(healthSlider.value < 20)
         {
@@ -181,6 +194,12 @@ public class UIController : MonoBehaviour
         reloadHintText.text = message;
     }
 
+    private void TriggerMap()
+    {
+        mapOpen = !mapOpen;
+        minimap.gameObject.SetActive(mapOpen);
+    }
+
     public IEnumerator ReloadAnimation(float duration)
     {
         reloadHintText.text = "";
@@ -242,7 +261,11 @@ public class UIController : MonoBehaviour
     }
 
 
-
+    public void ToggleADS()
+    {
+        crosshairOn = !crosshairOn;
+        crossHairsImage.gameObject.SetActive(crosshairOn);
+    }
 
 
 

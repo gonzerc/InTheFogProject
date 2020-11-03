@@ -25,15 +25,15 @@ public class ZombieChaseState : StateMachineBehaviour
         if (zController.IsChasingPlayer())
         {
             agent.SetDestination(player.transform.position);
-            Debug.Log("chasing");
+            //Debug.Log("chasing");
         }
         else if (zController.IsLookingForPlayer())
         {
-            Debug.Log("looking");
+            //Debug.Log("looking");
             Debug.DrawRay(agent.destination, Vector3.up * 5f, Color.green, 15f);
             if(Vector3.Distance(animator.transform.position, agent.destination) < 2f)
             {
-                Debug.Log("lost");
+                //Debug.Log("lost");
                 zController.SetLookingForPlayer(false);
                 animator.SetBool("isChasing", false);
             }
