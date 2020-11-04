@@ -13,12 +13,15 @@ public class GameController : MonoBehaviour
     public static bool gamePaused;
     public static bool terminalOpen;
 
+    public Camera mainCam;
+    public Vector3 deathCamPos;
 
+    public Camera deathCam;
+
+    public static bool gameOver;
     private Boolean roundRunning;
     private UIController uiController;
 
-
-    // Start is called before the first frame update
     void Awake()
     {
         uiController = FindObjectOfType<UIController>();
@@ -27,6 +30,8 @@ public class GameController : MonoBehaviour
         roundRunning = false;
         gamePaused = false;
         terminalOpen = false;
+
+        gameOver = false;
     }
 
 
@@ -38,26 +43,30 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //start of round
-        if (ZombieController.zombies.Count > 0)
+        //while game is running
+        if (!gameOver)
         {
-            roundRunning = true;
-        }
+            //start of round
+            if (ZombieController.zombies.Count > 0)
+            {
+                roundRunning = true;
+            }
 
-        //end of round
-        if (roundRunning && ZombieController.zombies.Count == 0)
-        {
-            //Debug.Log("Round over");
-            roundRunning = false;
-            roundNumber++;
-            numEnemies = numEnemies + (numEnemies / 2);
-            StartCoroutine(DelayBetweenRounds());
-        }
+            //end of round
+            if (roundRunning && ZombieController.zombies.Count == 0)
+            {
+                //Debug.Log("Round over");
+                roundRunning = false;
+                roundNumber++;
+                numEnemies = numEnemies + (numEnemies / 2);
+                StartCoroutine(DelayBetweenRounds());
+            }
 
-        //Pause Game
-        if (Input.GetKeyDown(KeyCode.Escape) && !terminalOpen)
-        {
-            PauseGame();
+            //Pause Game
+            if (Input.GetKeyDown(KeyCode.Escape) && !terminalOpen)
+            {
+                PauseGame();
+            }
         }
     }
 
@@ -92,12 +101,11 @@ public class GameController : MonoBehaviour
         Enemy.ContinueGame();
     }
 
-    public static void QuitGame()
+    public void QuitGame()
     {
-        Enemy.QuitGame();
-
         Time.timeScale = 1;
-        SceneManager.LoadScene("MainMenu");
+        StartCoroutine(EndGame(false));
+        //SceneManager.LoadScene("MainMenu");
     }
 
     private IEnumerator DelayBetweenRounds()
@@ -110,5 +118,33 @@ public class GameController : MonoBehaviour
             timer -= 1;
         }
         StartNextRound();
+    }
+
+    public IEnumerator EndGame(bool playerDeath)
+    {
+        Debug.Log("Game Ended.");
+        gameOver = true;
+
+        ZombieController.QuitGame();
+        FindObjectOfType<PlayerController>().enabled = false;
+        FindObjectOfType<MusicController>().PlayGameOver();
+
+        if (playerDeath)
+        {
+            StartCoroutine(uiController.FadeToDeath(new Color(0.1f, 0.0f, 0.0f)));
+
+            yield return new WaitForSeconds(5f);
+
+        }
+        uiController.gameObject.SetActive(false);
+
+        deathCam.gameObject.SetActive(true);
+        mainCam.GetComponent<AudioListener>().enabled = false;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        deathCam.GetComponentInChildren<LoseScreenScript>().Display(roundNumber, FindObjectOfType<PlayerController>().GetMoneyEarned(), FindObjectOfType<PlayerController>().GetMoneySpent());
+
     }
 }

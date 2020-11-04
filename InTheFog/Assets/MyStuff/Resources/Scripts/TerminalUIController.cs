@@ -25,8 +25,8 @@ public class TerminalUIController : MonoBehaviour
         terminalScript = FindObjectOfType<TerminalScript>();
         player = FindObjectOfType<PlayerController>();
 
-        healthRegen.Initialize("Health Regen", 500);
-        ammoRefill.Initialize("Buy Ammo", 300);
+        healthRegen.Initialize("Health Regen +20", 500);
+        ammoRefill.Initialize("Buy Ammo +20", 300);
         itemOne.Initialize("TBD One", 10000);
         itemTwo.Initialize("TBD Two", 10000);
         itemThree.Initialize("TBD Three", 10000);

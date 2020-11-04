@@ -20,7 +20,8 @@ public class PlayerController : MonoBehaviour
     public float crouchRadius;
     public float shootRadius;
 
-    public float cameraSpeed;
+    public float regCameraSpeed;
+    public float adsCameraSpeed;
     public float upperPitchLimit;
     public float lowerPitchLimit;
     public GameObject gun;
@@ -32,7 +33,7 @@ public class PlayerController : MonoBehaviour
     public int magazineSize;
 
     private float moveSpeed;
-    private Vector3 jump;
+    private float camSpeed;
     private float yaw = 0.0f;
     private float pitch = 0.0f;
     private Rigidbody rb;
@@ -43,6 +44,9 @@ public class PlayerController : MonoBehaviour
     private bool crouching;
     private bool sprinting;
 
+    private int moneyEarned;
+    private int moneySpent;
+
     private UIController ui;
     private MusicController musicController;
     private DetectionScript detectionScript;
@@ -51,7 +55,7 @@ public class PlayerController : MonoBehaviour
     {
         playerHealth = 100;
         playerStamina = 100;
-        playerCurrency = 0;
+        playerCurrency = moneySpent = moneyEarned = 0;
     }
 
     // Start is called before the first frame update
@@ -62,13 +66,13 @@ public class PlayerController : MonoBehaviour
         playerCam = GetComponentInChildren<Camera>();
         ui = FindObjectOfType<UIController>();
         musicController = FindObjectOfType<MusicController>();
-        jump = new Vector3(0.0f, 2.0f, 0.0f);
         nextFire = 0.0f;
         magazineSize = 10;
         bulletsInMag = 10;
         ammoRemaining = 40;
 
         moveSpeed = walkSpeed;
+        camSpeed = regCameraSpeed;
         reloading = false;
         crouching = false;
         sprinting = false;
@@ -94,11 +98,15 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!GameController.gamePaused && !GameController.terminalOpen)
+        if(playerHealth <= 0)
+        {
+            StartCoroutine(FindObjectOfType<GameController>().EndGame(true));
+        }
+        else if (!GameController.gamePaused && !GameController.terminalOpen)
         {
             //camera move on mouse movement
-            yaw += cameraSpeed * Input.GetAxis("Mouse X");
-            pitch -= cameraSpeed * Input.GetAxis("Mouse Y");
+            yaw += camSpeed * Input.GetAxis("Mouse X");
+            pitch -= camSpeed * Input.GetAxis("Mouse Y");
             pitch = Mathf.Clamp(pitch, lowerPitchLimit, upperPitchLimit);
 
             //rotate player left/right
@@ -117,11 +125,10 @@ public class PlayerController : MonoBehaviour
                 {
                     StartCoroutine(FireShot());
                 }
-                if (bulletsInMag == 0 && ammoRemaining >0)
+                if (bulletsInMag < 3 && ammoRemaining > 0)
                 {
                     //Debug.Log("Out of ammo");
                     ui.DisplayReloadMessage("RELOAD");
-                    musicController.PlayEmptyMag();
                 }
                 if (bulletsInMag == 0 && ammoRemaining == 0)
                 {
@@ -132,7 +139,7 @@ public class PlayerController : MonoBehaviour
             }
 
             //reload gun
-            if (Input.GetKeyDown(KeyCode.R) && ammoRemaining > 0)
+            if ( (Input.GetKeyDown(KeyCode.R) || bulletsInMag == 0) && ammoRemaining > 0)
             {
                 StartCoroutine(Reload());
             }
@@ -185,12 +192,14 @@ public class PlayerController : MonoBehaviour
                 //Debug.Log("ADS on");
                 gun.transform.localPosition = Vector3.Lerp(gun.transform.localPosition, new Vector3(0.0f, -0.15f, 0.5f), 60);
                 playerCam.fieldOfView = Mathf.Lerp(60f, 40f, Time.time);
+                camSpeed = adsCameraSpeed;
                 ui.ToggleADS();
             }
             if (Input.GetButtonUp("Fire2"))
             {
                 //Debug.Log("ADS off");
                 ui.ToggleADS();
+                camSpeed = regCameraSpeed;
                 gun.transform.localPosition = Vector3.Lerp(gun.transform.localPosition, new Vector3(0.35f, -0.5f, 1.0f), 30);
                 playerCam.fieldOfView = Mathf.Lerp(40f, 60f, Time.time);
             }
@@ -233,11 +242,23 @@ public class PlayerController : MonoBehaviour
     public void AddCurrency(int amount)
     {
         playerCurrency += amount;
+        moneyEarned += amount;
     }
 
     public void RemoveCurrency(int amount)
     {
         playerCurrency -= amount;
+        moneySpent += amount;
+    }
+
+    public int GetMoneyEarned()
+    {
+        return moneyEarned;
+    }
+
+    public int GetMoneySpent()
+    {
+        return moneySpent;
     }
 
     public void RefillAmmo(int amount)

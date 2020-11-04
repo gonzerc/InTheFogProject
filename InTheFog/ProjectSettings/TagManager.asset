@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - PlayerDetection
+  - DeathCamera
   layers:
   - Default
   - TransparentFX

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class UIController : MonoBehaviour
 {
     public RawImage healthBorderImage;
+    public RawImage deathImage;
     public Text roundNumberText;
     public Text enemiesText;
     public Slider healthSlider;
@@ -48,10 +49,12 @@ public class UIController : MonoBehaviour
     void Awake()
     {
         healthBorderImage.transform.SetAsFirstSibling();
+        gameMessageText.transform.SetAsLastSibling();
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
         healthBorderImage.color = faded;
+        deathImage.color = faded;
         gameMessageText.text = "";
         gameMessageText.color = faded;
         textFaded = true;
@@ -106,8 +109,15 @@ public class UIController : MonoBehaviour
     {
         roundNumberText.text = "Round " + GameController.roundNumber;
         enemiesText.text = "Zombies Remaining: " + ZombieController.zombies.Count;
+        
+        
         healthSlider.value = player.GetPlayerHealth();
+        healthSlider.GetComponentInChildren<Text>().text = player.GetPlayerHealth().ToString();
+        
         staminaSlider.value = player.GetPlayerStamina();
+        staminaSlider.GetComponentInChildren<Text>().text = player.GetPlayerStamina().ToString();
+        
+        
         bulletsText.text = player.bulletsInMag + " / " + player.ammoRemaining;
 
         healthColor = new Color(1.0f, 1.0f, 1.0f, (100 - healthSlider.value) / 100);
@@ -172,7 +182,7 @@ public class UIController : MonoBehaviour
     {
         musicController.ButtonClick();
 
-        GameController.QuitGame();
+        FindObjectOfType<GameController>().QuitGame();
     }
 
     // ===============================================================
@@ -267,7 +277,23 @@ public class UIController : MonoBehaviour
         crossHairsImage.gameObject.SetActive(crosshairOn);
     }
 
+    public IEnumerator FadeToDeath(Color endColor)
+    {
+        gameMessageText.text = "YOU DIED";
+        gameMessageText.color = whole;
+        float timer = 0f;
+        float fadeTimer = 5f;
+        Color startColor = deathImage.color;
 
+        while(timer < fadeTimer)
+        {
+            deathImage.color = Color.Lerp(startColor, endColor, timer / fadeTimer);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        //StartCoroutine(FadeToDeath(Color.black));
+    }
 
     public void ChangeInGameElements(bool b)
     {

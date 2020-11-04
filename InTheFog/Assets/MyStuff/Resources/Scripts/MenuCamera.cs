@@ -13,7 +13,7 @@ public class MenuCamera : MonoBehaviour
             this.transform.position += new Vector3(0.0f, 0.0f, speed * Time.deltaTime);
         }
 
-        if(transform.position.z > 70 && speed > 0)
+        if(transform.position.z > 20 && speed > 0)
         {
             speed -= 0.05f * Time.deltaTime;
         }

@@ -1278,17 +1278,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicClips:
-  - {fileID: 8300000, guid: 6420c96c57f4f2447a0a8ae98f3b3ff1, type: 3}
   - {fileID: 8300000, guid: d805209747ea0db44b106b80eb1ca6f5, type: 3}
-  - {fileID: 8300000, guid: f9ab345a6cec233499c8da60a58fb5b7, type: 3}
+  - {fileID: 8300000, guid: d805209747ea0db44b106b80eb1ca6f5, type: 3}
   sources:
   - {fileID: 188786485}
   - {fileID: 188786487}
   buttonClick: {fileID: 8300000, guid: 32d4b1811dda14a6cb9e059ee8ad17d2, type: 3}
-  gunShot: {fileID: 8300000, guid: 65201ddabb4144f6a8fb9480120b7656, type: 3}
-  reloadSFX: {fileID: 8300000, guid: e7632c6401c09437e83de45d33c5858e, type: 3}
+  gunShot: {fileID: 0}
+  reloadSFX: {fileID: 0}
   emptyMag: {fileID: 0}
   cash: {fileID: 0}
+  gameOverMusic: {fileID: 0}
 --- !u!82 &188786485
 AudioSource:
   m_ObjectHideFlags: 0

@@ -13,6 +13,8 @@ public class MusicController : MonoBehaviour
     public AudioClip emptyMag;
     public AudioClip cash;
 
+    public AudioClip gameOverMusic;
+
     private AudioSource music;
     private AudioSource sfx;
     private int clipPlaying;
@@ -29,7 +31,7 @@ public class MusicController : MonoBehaviour
 
     void Update()
     {
-        if (!music.isPlaying)
+        if (!music.isPlaying && !GameController.gameOver)
         {
             music.clip = musicClips[clipPlaying];
             music.Play();
@@ -41,6 +43,13 @@ public class MusicController : MonoBehaviour
             }
             clipPlaying = nextIndex;
         }
+    }
+
+    public void PlayGameOver()
+    {
+        music.Stop();
+        music.clip = gameOverMusic;
+        music.Play();
     }
 
     public void ButtonClick()
