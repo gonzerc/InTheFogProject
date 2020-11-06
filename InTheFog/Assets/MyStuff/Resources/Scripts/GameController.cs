@@ -144,7 +144,7 @@ public class GameController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        deathCam.GetComponentInChildren<LoseScreenScript>().Display(roundNumber, FindObjectOfType<PlayerController>().GetMoneyEarned(), FindObjectOfType<PlayerController>().GetMoneySpent());
+        deathCam.GetComponentInChildren<GameOverScript>().Display(roundNumber, FindObjectOfType<PlayerController>().GetMoneyEarned(), FindObjectOfType<PlayerController>().GetMoneySpent());
 
     }
 }

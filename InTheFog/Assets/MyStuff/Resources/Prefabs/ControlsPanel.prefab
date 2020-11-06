@@ -79,8 +79,8 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1.5
   m_Text: "Move Forward:\t\t\t\tW\nMove Backward: \t\t\tS\nStrafe Left:\t\t\t\t\tA\nStrafe
-    Right:\t\t\t\t\tD\nLook Up/Down\t\t\tMouse Y\nLook Right/Left\t\t\tMouse X\nSprint\t\t\t\t\t\tLShift\nCrouch\t\t\t\t\t\tLCtrl\n\nFire\t\t\t\t\t\t\tLMB\nZoom
-    Sight\t\t\t\tRMB\nReload\t\t\t\t\t\t\tR\nInteract\t\t\t\t\t\t\tE"
+    Right:\t\t\t\t\tD\nLook Up/Down\t\t\tMouse Y\nLook Right/Left\t\t\tMouse X\nSprint\t\t\t\t\t\tLShift\nCrouch\t\t\t\t\t\tLCtrl\nFire\t\t\t\t\t\t\tLMB\nZoom
+    Sight\t\t\t\tRMB\nReload\t\t\t\t\t\t\tR\nInteract\t\t\t\t\t\t\tE\nOpen Minimap\t\t\t\tM"
 --- !u!1 &2317312973816947313
 GameObject:
   m_ObjectHideFlags: 0

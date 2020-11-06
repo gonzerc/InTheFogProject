@@ -19,9 +19,11 @@ public class UIController : MonoBehaviour
 
     //in game only elements
     public Image crossHairsImage;
+    public Image hitMarkerImage;
     public Text bulletsText;
     public Slider reloadBar;
     public Text reloadHintText;
+    public Text detectionText;
     public GameObject interactText;
 
     //pause screen elements
@@ -61,6 +63,7 @@ public class UIController : MonoBehaviour
         mapOpen = false;
         crosshairOn = true;
         reloadHintText.text = "";
+        detectionText.text = "";
 
         inGameElements = new ArrayList();
         pauseElements = new ArrayList();
@@ -68,6 +71,7 @@ public class UIController : MonoBehaviour
         inGameElements.Add(crossHairsImage.gameObject);
         inGameElements.Add(bulletsText.gameObject);
         inGameElements.Add(reloadHintText.gameObject);
+        inGameElements.Add(detectionText.gameObject);
         pauseElements.Add(pauseText.gameObject);
         pauseElements.Add(continueButton.gameObject);
         pauseElements.Add(controlsButton.gameObject);
@@ -100,6 +104,7 @@ public class UIController : MonoBehaviour
             o.SetActive(false);
         }
 
+        hitMarkerImage.gameObject.SetActive(false);
         pauseBackground.gameObject.SetActive(false);
 
     }
@@ -204,6 +209,11 @@ public class UIController : MonoBehaviour
         reloadHintText.text = message;
     }
 
+    public void SetPlayerDetectedText(string status)
+    {
+        detectionText.text = status;
+    }
+
     private void TriggerMap()
     {
         mapOpen = !mapOpen;
@@ -275,6 +285,13 @@ public class UIController : MonoBehaviour
     {
         crosshairOn = !crosshairOn;
         crossHairsImage.gameObject.SetActive(crosshairOn);
+    }
+
+    public IEnumerator DisplayHitMarker()
+    {
+        hitMarkerImage.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        hitMarkerImage.gameObject.SetActive(false);
     }
 
     public IEnumerator FadeToDeath(Color endColor)

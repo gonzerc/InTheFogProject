@@ -68,45 +68,51 @@ public class ZombieController : MonoBehaviour
         return lookingForPlayer;
     }
 
-    public void SetLookingForPlayer(bool state)
-    {
-        lookingForPlayer = state;
-    }
-
     public void DetectPlayer()
     {
         chasingPlayer = true;
         animator.SetBool("isChasing", true);
+        player.GetComponent<PlayerController>().SetZombieDetected(animator.gameObject);
     }
 
     public void UndetectPlayer()
     {
         chasingPlayer = false;
         lookingForPlayer = true;
-        //animator.SetBool("isChasing", false);
+        player.GetComponent<PlayerController>().SetZombieSearching(animator.gameObject);
+    }
+
+    public void LostPlayer()
+    {
+        lookingForPlayer = false;
+        player.GetComponent<PlayerController>().SetZombieLost(animator.gameObject);
     }
 
     public void TakeDamage(int damage)
     {
         Debug.Log(zombieIndex + " took " + damage + " damage.");
         zombieHealth -= damage;
+        StartCoroutine(FindObjectOfType<UIController>().DisplayHitMarker());
+
         //StartCoroutine(DamageAnimation());
     }
 
 
-    private IEnumerator DamageAnimation()
-    {
-        //Color normalColor = GetComponent<MeshRenderer>().material.color;
-        //this.gameObject.GetComponent<MeshRenderer>().material.color = Color.red;
+    //private IEnumerator DamageAnimation()
+    //{
+    //    Color normalColor = GetComponent<MeshRenderer>().material.color;
+    //    this.gameObject.GetComponent<MeshRenderer>().material.color = Color.red;
 
-        yield return new WaitForSeconds(0.25f);
-        //this.gameObject.GetComponent<MeshRenderer>().material.color = normalColor;
-    }
+    //    yield return new WaitForSeconds(0.25f);
+    //    this.gameObject.GetComponent<MeshRenderer>().material.color = normalColor;
+    //}
 
 
 
     private IEnumerator ActivateZombieDeath()
     {
+        Debug.Log(zombieIndex + " died");
+        player.GetComponent<PlayerController>().SetZombieLost(this.gameObject);
         zombies.Remove(this.gameObject);
 
         int animInt = Random.Range(0, 2);

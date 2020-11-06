@@ -43,9 +43,15 @@ public class PlayerController : MonoBehaviour
     private bool reloading;
     private bool crouching;
     private bool sprinting;
+    private bool ads;
 
     private int moneyEarned;
     private int moneySpent;
+
+    [SerializeField]
+    private List<GameObject> zombiesDetected;
+    [SerializeField]
+    private List<GameObject> zombiesSearching;
 
     private UIController ui;
     private MusicController musicController;
@@ -76,6 +82,9 @@ public class PlayerController : MonoBehaviour
         reloading = false;
         crouching = false;
         sprinting = false;
+
+        zombiesDetected = new List<GameObject>();
+        zombiesSearching = new List<GameObject>();
     }
 
 
@@ -92,6 +101,9 @@ public class PlayerController : MonoBehaviour
             Vector3 sidestep = transform.right * h * moveSpeed * Time.deltaTime;
             rb.MovePosition(rb.position + movement + sidestep);
         }
+
+        zombiesDetected.RemoveAll(GameObject => GameObject == null);
+        zombiesSearching.RemoveAll(GameObject => GameObject == null);
     }
 
 
@@ -189,19 +201,41 @@ public class PlayerController : MonoBehaviour
             ////ADS
             if (Input.GetButtonDown("Fire2"))
             {
-                //Debug.Log("ADS on");
-                gun.transform.localPosition = Vector3.Lerp(gun.transform.localPosition, new Vector3(0.0f, -0.15f, 0.5f), 60);
-                playerCam.fieldOfView = Mathf.Lerp(60f, 40f, Time.time);
-                camSpeed = adsCameraSpeed;
-                ui.ToggleADS();
-            }
-            if (Input.GetButtonUp("Fire2"))
-            {
+                if (!ads)
+                {
+                    //Debug.Log("ADS on");
+                    gun.transform.localPosition = Vector3.Lerp(gun.transform.localPosition, new Vector3(0.0f, -0.15f, 0.5f), 60);
+                    playerCam.fieldOfView = Mathf.Lerp(60f, 40f, Time.time);
+                    camSpeed = adsCameraSpeed;
+                    ui.ToggleADS();
+
+                }
                 //Debug.Log("ADS off");
-                ui.ToggleADS();
-                camSpeed = regCameraSpeed;
-                gun.transform.localPosition = Vector3.Lerp(gun.transform.localPosition, new Vector3(0.35f, -0.5f, 1.0f), 30);
-                playerCam.fieldOfView = Mathf.Lerp(40f, 60f, Time.time);
+                else if (ads)
+                {
+                    ui.ToggleADS();
+                    camSpeed = regCameraSpeed;
+                    gun.transform.localPosition = Vector3.Lerp(gun.transform.localPosition, new Vector3(0.35f, -0.5f, 1.0f), 30);
+                    playerCam.fieldOfView = Mathf.Lerp(40f, 60f, Time.time);
+                }
+
+                ads = !ads;
+            }
+
+
+            //Updating zombie detection status
+
+            if(zombiesDetected.Count > 0)
+            {
+                ui.SetPlayerDetectedText("DETECTED");
+            }
+            else if(zombiesSearching.Count > 0 && zombiesDetected.Count == 0)
+            {
+                ui.SetPlayerDetectedText("SEARCHING");
+            }
+            else
+            {
+                ui.SetPlayerDetectedText("");
             }
         }
     }
@@ -266,13 +300,35 @@ public class PlayerController : MonoBehaviour
         ammoRemaining += amount;
     }
 
+
+    public void SetZombieDetected(GameObject zombie)
+    {
+        if (zombiesSearching.Contains(zombie))
+        {
+            zombiesSearching.Remove(zombie);
+        }
+        zombiesDetected.Add(zombie);
+    }
+
+    public void SetZombieSearching(GameObject zombie)
+    {
+        zombiesDetected.Remove(zombie);
+        zombiesSearching.Add(zombie);
+    }
+
+    public void SetZombieLost(GameObject zombie)
+    {
+        zombiesDetected.Remove(zombie);
+        zombiesSearching.Remove(zombie);
+    }
+
     private IEnumerator DecreaseStamina()
     {
         while (playerStamina > 0 && sprinting)
         {
             int value = 1;
             playerStamina -= value;
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.2f);
         }
     }
 

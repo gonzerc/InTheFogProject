@@ -358,7 +358,8 @@ MonoBehaviour:
   sprintRadius: 25
   crouchRadius: 5
   shootRadius: 40
-  cameraSpeed: 2.5
+  regCameraSpeed: 2.5
+  adsCameraSpeed: 1
   upperPitchLimit: 60
   lowerPitchLimit: -60
   gun: {fileID: 8194576432212754771}
@@ -368,6 +369,8 @@ MonoBehaviour:
   bulletsInMag: 0
   ammoRemaining: 0
   magazineSize: 0
+  zombiesDetected: []
+  zombiesSearching: []
 --- !u!1001 &4278943612677256431
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -386,6 +389,26 @@ PrefabInstance:
     - target: {fileID: 409448912020976430, guid: 4dfb6ffaaa0255047919c99fc37dc8d6, type: 3}
       propertyPath: m_LocalScale.z
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3932255801084119029, guid: 4dfb6ffaaa0255047919c99fc37dc8d6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3932255801084119031, guid: 4dfb6ffaaa0255047919c99fc37dc8d6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5393385263063517727, guid: 4dfb6ffaaa0255047919c99fc37dc8d6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.018
+      objectReference: {fileID: 0}
+    - target: {fileID: 5393385263063517727, guid: 4dfb6ffaaa0255047919c99fc37dc8d6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.016
+      objectReference: {fileID: 0}
+    - target: {fileID: 5393385263063517727, guid: 4dfb6ffaaa0255047919c99fc37dc8d6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.925
       objectReference: {fileID: 0}
     - target: {fileID: 5393385263258514876, guid: 4dfb6ffaaa0255047919c99fc37dc8d6, type: 3}
       propertyPath: m_Name
